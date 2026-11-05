@@ -8,14 +8,20 @@ Provides an overview of specifications, agent activity, workflow status, queue o
 
 ### Requirement: Main dashboard overview
 
-The application SHALL provide a dashboard displaying all known specifications and their current workflow states.
+The application SHALL provide a dashboard displaying all known specifications and their current workflow states, with Grid as the initial display mode.
 
 #### Scenario: Opening the dashboard
-- WHEN the user opens the main dashboard
-- THEN the application displays the specification grid
+- WHEN the user opens the main dashboard in a new application session
+- THEN the application displays the specification cards in grid view
+- AND the Grid display mode control is selected
 - AND summary metrics are visible
 - AND the active agent count is displayed
 - AND the Attention Inbox indicator is accessible
+
+#### Scenario: Choosing list view
+- WHEN the user selects List from the dashboard display mode control
+- THEN the specification cards are displayed in list view
+- AND the List display mode control is selected
 
 ### Requirement: Specification cards
 
@@ -109,11 +115,11 @@ The dashboard SHALL support searching and filtering specifications.
 
 ### Requirement: Visual presentation
 
-The dashboard SHALL follow the SpecOps visual design language.
+The dashboard SHALL follow the SpecOps visual design language in the selected Dark or Light appearance.
 
 #### Scenario: Rendering the application
 - WHEN the dashboard is displayed
-- THEN it uses the dark charcoal and orange theme
+- THEN it uses the selected appearance with orange accents and readable status colors
 - AND no permanent navigation sidebar or specification detail panel is displayed
 - AND no permanent priority queue panel is displayed
 - AND native operating-system window controls are preserved
@@ -125,6 +131,11 @@ The dashboard SHALL follow the SpecOps visual design language.
 - THEN the selected mode continues to use the available dashboard content width
 - AND grid cards form additional columns when the window is wide enough
 - AND the collection remains usable without horizontal page overflow at narrow widths
+
+#### Scenario: Light dashboard reference
+- WHEN Light is active on the dashboard
+- THEN its background, cards, borders, controls, text, and status treatments follow `designs/main-dashboard-light.png` where depicted
+- AND card activation still opens the workspace without retaining a dashboard selection state
 
 ### Requirement: Mock data isolation
 

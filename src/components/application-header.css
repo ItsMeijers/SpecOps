@@ -25,6 +25,12 @@
 .application-header__new:hover { filter: brightness(1.07); }
 .application-header__account { display: flex; align-items: center; gap: 8px; flex: none; padding: 0 0 0 10px; color: #8f969f; border: 0; background: transparent; }
 .application-header__account > span { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #f97316; color: #fff; font-size: 14px; }
+.application-header__profile { position: relative; flex: none; }
+.application-header__profile-menu { position: absolute; z-index: 30; top: calc(100% + 10px); right: 0; width: 190px; padding: 7px; border: 1px solid var(--border); border-radius: 9px; color: var(--text); background: var(--surface-raised); box-shadow: 0 14px 35px #0009; }
+.application-header__profile-heading { padding: 7px 9px 8px; color: var(--text-muted); font-size: 11px; font-weight: 600; }
+.application-header__profile-menu button { width: 100%; display: flex; align-items: center; gap: 10px; padding: 9px; border: 0; border-radius: 6px; color: var(--text); background: transparent; text-align: left; font-size: 12px; }
+.application-header__profile-menu button:hover,.application-header__profile-menu button:focus-visible { background: var(--surface-hover); outline: 2px solid var(--accent); outline-offset: -2px; }
+.application-header__profile-menu .profile-check { margin-left: auto; color: var(--accent-ink); }
 
 @media (max-width: 1320px) {
   .application-header { grid-template-columns: minmax(175px,1fr) minmax(300px,1.7fr) minmax(310px,1fr); padding: 0 22px; }

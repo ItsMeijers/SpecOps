@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ExternalLink, GitBranch, LockKeyhole, MoreHorizontal, Pause, Play, X } from 'lucide-react';
 import type { Specification } from '../../types/specification';
+import type { Theme } from '../../theme';
 import { ApplicationHeader } from '../ApplicationHeader';
 import { mockWorkspace } from '../../data/mockWorkspace';
 import { concurrencyLimit, mockAttentionEvents, mockSpecifications } from '../../data/mockSpecifications';
@@ -14,9 +15,9 @@ import { WorkspaceDocumentView } from './WorkspaceDocumentView';
 import { FilesView, GitHubView } from './WorkspaceReferenceViews';
 import './workspace.css';
 
-type Props = { specification: Specification; queueOpen: boolean; onOpenQueue: (trigger: HTMLButtonElement) => void; onBack: () => void; onOpenSpecification: (id: string) => void };
+type Props = { specification: Specification; theme: Theme; onTheme: (theme: Theme) => void; queueOpen: boolean; onOpenQueue: (trigger: HTMLButtonElement) => void; onBack: () => void; onOpenSpecification: (id: string) => void };
 
-export function SpecificationWorkspace({ specification, queueOpen, onOpenQueue, onBack, onOpenSpecification }: Props) {
+export function SpecificationWorkspace({ specification, theme, onTheme, queueOpen, onOpenQueue, onBack, onOpenSpecification }: Props) {
   const details = mockWorkspace[specification.id];
   const [inboxOpen, setInboxOpen] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -47,7 +48,7 @@ export function SpecificationWorkspace({ specification, queueOpen, onOpenQueue, 
   const openGitHub = (url?: string) => url ? window.open(url, '_blank', 'noopener,noreferrer') : setNotice('No GitHub URL is available for this mock specification.');
   return <div className="spec-workspace">
     <div className="application-header-area">
-    <ApplicationHeader mode="workspace" onBack={onBack} backButtonRef={backButtonRef} activeAgents={activeAgents} limit={concurrencyLimit} attentionCount={mockAttentionEvents.length} inboxOpen={inboxOpen} queueOpen={queueOpen} onQueue={onOpenQueue} onInbox={() => setInboxOpen(value => !value)} onSettings={() => setNotice('Account settings will be available in a future change.')} onAccount={() => setNotice('Account options will be available in a future change.')} />
+    <ApplicationHeader mode="workspace" theme={theme} onTheme={onTheme} onBack={onBack} backButtonRef={backButtonRef} activeAgents={activeAgents} limit={concurrencyLimit} attentionCount={mockAttentionEvents.length} inboxOpen={inboxOpen} queueOpen={queueOpen} onQueue={onOpenQueue} onInbox={() => setInboxOpen(value => !value)} onSettings={() => setNotice('Account settings will be available in a future change.')} />
     {inboxOpen && <AttentionInbox
       events={mockAttentionEvents}
       specifications={mockSpecifications}

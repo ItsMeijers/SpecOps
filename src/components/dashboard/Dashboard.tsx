@@ -3,6 +3,7 @@ import { Grid2X2, List, X } from 'lucide-react';
 import { ApplicationHeader } from '../ApplicationHeader';
 import { concurrencyLimit, mockAttentionEvents, mockSpecifications } from '../../data/mockSpecifications';
 import type { SortMode, Specification, ViewMode, WorkflowStatus } from '../../types/specification';
+import type { Theme } from '../../theme';
 import { AttentionInbox } from './AttentionInbox';
 import { SpecificationGrid } from './SpecificationGrid';
 import { statusMeta, statusOptions } from './status';
@@ -20,13 +21,13 @@ function matchesSearch(spec: Specification, query: string) {
   return [spec.title, spec.repository, spec.description, `#${spec.issueNumber ?? ''}`, String(spec.issueNumber ?? ''), ...spec.tags].some(part => part.toLowerCase().includes(value));
 }
 
-export function Dashboard({ active, queueOrder, queueOpen, onOpenQueue, onOpenSpecification }: { active: boolean; queueOrder: string[]; queueOpen: boolean; onOpenQueue: (trigger: HTMLButtonElement) => void; onOpenSpecification: (id: string) => void }) {
+export function Dashboard({ active, theme, onTheme, queueOrder, queueOpen, onOpenQueue, onOpenSpecification }: { active: boolean; theme: Theme; onTheme: (theme: Theme) => void; queueOrder: string[]; queueOpen: boolean; onOpenQueue: (trigger: HTMLButtonElement) => void; onOpenSpecification: (id: string) => void }) {
   const [query, setQuery] = useState('');
   const [group, setGroup] = useState<Group>('all');
   const [repository, setRepository] = useState('all');
   const [status, setStatus] = useState<WorkflowStatus | 'all'>('all');
   const [sort, setSort] = useState<SortMode>('default');
-  const [view, setView] = useState<ViewMode>('list');
+  const [view, setView] = useState<ViewMode>('grid');
   const [inboxOpen, setInboxOpen] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
 
@@ -49,7 +50,7 @@ export function Dashboard({ active, queueOrder, queueOpen, onOpenQueue, onOpenSp
   const selectSpec = (id: string) => { setInboxOpen(false); onOpenSpecification(id); };
   return <div className="dashboard">
     <div className="application-header-area">
-    <ApplicationHeader mode="dashboard" enabled={active && !queueOpen} query={query} onQuery={setQuery} activeAgents={activeAgents} limit={concurrencyLimit} attentionCount={mockAttentionEvents.length} inboxOpen={inboxOpen} queueOpen={queueOpen} onQueue={onOpenQueue} onInbox={() => setInboxOpen(value => !value)} onNew={() => setNotice('Specification creation will be available in a future change.')} onSettings={() => setNotice('Account settings will be available in a future change.')} onAccount={() => setNotice('Account settings will be available in a future change.')} />
+    <ApplicationHeader mode="dashboard" enabled={active && !queueOpen} theme={theme} onTheme={onTheme} query={query} onQuery={setQuery} activeAgents={activeAgents} limit={concurrencyLimit} attentionCount={mockAttentionEvents.length} inboxOpen={inboxOpen} queueOpen={queueOpen} onQueue={onOpenQueue} onInbox={() => setInboxOpen(value => !value)} onNew={() => setNotice('Specification creation will be available in a future change.')} onSettings={() => setNotice('Account settings will be available in a future change.')} />
     {inboxOpen && <AttentionInbox events={mockAttentionEvents} specifications={mockSpecifications} onClose={() => setInboxOpen(false)} onSelect={selectSpec} />}
     </div>
     <main className="dashboard-content">

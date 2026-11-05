@@ -4,14 +4,32 @@
 @import "@fontsource/inter/latin-700.css";
 @import "@fontsource/inter/latin-800.css";
 @import "tailwindcss";
+@import "./theme.css";
 
 :root {
-  --accent: #ff7419;
+  --accent: #f97316;
+  --accent-ink: #ff851c;
+  --accent-soft: #2b1b11;
+  --page: #08090a;
+  --surface: #101417;
+  --surface-raised: #171b1f;
+  --surface-hover: #1b2024;
+  --border: #252d31;
+  --text: #f6f6f7;
+  --text-secondary: #b9bec4;
+  --text-muted: #8f969f;
+  --track: #252a2e;
+  --status-blue: #1aafff;
+  --status-blue-soft: #0f2534;
+  --status-green: #41d487;
+  --status-green-soft: #0f291c;
+  --status-amber: #e5ae56;
+  --status-amber-soft: #2b2315;
   --muted-copy: #aeb1b8;
   --panel-surface: #111213;
   font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #f6f6f7;
-  background: #08090a;
+  color: var(--text);
+  background: var(--page);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

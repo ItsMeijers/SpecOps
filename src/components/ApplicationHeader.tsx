@@ -1,10 +1,13 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Ref } from 'react';
-import { ArrowLeft, Bell, ChevronDown, ListOrdered, Plus, Search, Settings2 } from 'lucide-react';
+import { ArrowLeft, Bell, Check, ChevronDown, ListOrdered, Moon, Plus, Search, Settings2, Sun } from 'lucide-react';
+import type { Theme } from '../theme';
 import { SpecOpsLogo } from './SpecOpsLogo';
 import './application-header.css';
 
 type CommonProps = {
+  theme: Theme;
+  onTheme: (theme: Theme) => void;
   activeAgents: number;
   limit: number;
   attentionCount: number;
@@ -13,7 +16,6 @@ type CommonProps = {
   onQueue: (trigger: HTMLButtonElement) => void;
   onInbox: () => void;
   onSettings: () => void;
-  onAccount: () => void;
 };
 
 type DashboardProps = CommonProps & {
@@ -34,9 +36,46 @@ type Props = DashboardProps | WorkspaceProps;
 
 export function ApplicationHeader(props: Props) {
   const searchRef = useRef<HTMLInputElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
+  const profileButtonRef = useRef<HTMLButtonElement>(null);
+  const darkOptionRef = useRef<HTMLButtonElement>(null);
+  const lightOptionRef = useRef<HTMLButtonElement>(null);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   useEffect(() => {
-    if (props.mode !== 'dashboard' || !props.enabled) return;
+    if (props.mode === 'dashboard' && !props.enabled) setProfileOpen(false);
+  }, [props.mode, props.mode === 'dashboard' ? props.enabled : true]);
+
+  useEffect(() => {
+    if (!profileOpen) return;
+    (props.theme === 'dark' ? darkOptionRef : lightOptionRef).current?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setProfileOpen(false);
+        profileButtonRef.current?.focus();
+      }
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        const current = document.activeElement;
+        if (current === darkOptionRef.current || current === lightOptionRef.current) {
+          event.preventDefault();
+          (current === darkOptionRef.current ? lightOptionRef : darkOptionRef).current?.focus();
+        }
+      }
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      if (!profileRef.current?.contains(event.target as Node)) setProfileOpen(false);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, [profileOpen, props.theme]);
+
+  useEffect(() => {
+    if (props.mode !== 'dashboard' || !props.enabled || profileOpen) return;
     const onKeyDown = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault();
@@ -45,7 +84,7 @@ export function ApplicationHeader(props: Props) {
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [props.mode, props.mode === 'dashboard' ? props.enabled : false]);
+  }, [props.mode, props.mode === 'dashboard' ? props.enabled : false, profileOpen]);
 
   return <header className={`application-header application-header--${props.mode}`}>
     <div className="application-header__left">
@@ -60,7 +99,14 @@ export function ApplicationHeader(props: Props) {
       <button className={`application-header__icon inbox-trigger ${props.inboxOpen ? 'is-active' : ''}`} type="button" onClick={props.onInbox} aria-label={`Attention Inbox, ${props.attentionCount} items`} aria-expanded={props.inboxOpen}><Bell size={20}/>{props.attentionCount > 0 && <span className="application-header__notification-count">{props.attentionCount}</span>}</button>
       <button className="application-header__icon application-header__settings" type="button" onClick={props.onSettings} aria-label="Settings"><Settings2 size={20}/></button>
       {props.mode === 'dashboard' && <button className="application-header__new" type="button" onClick={props.onNew} aria-label="New Specification"><Plus size={18}/><span>New Specification</span></button>}
-      <button className="application-header__account" type="button" onClick={props.onAccount} aria-label="Account options"><span>TM</span><ChevronDown size={16}/></button>
+      <div className="application-header__profile" ref={profileRef}>
+        <button ref={profileButtonRef} className="application-header__account" type="button" onClick={() => setProfileOpen(value => !value)} aria-label="Profile and appearance" aria-haspopup="menu" aria-expanded={profileOpen}><span>TM</span><ChevronDown size={16}/></button>
+        {profileOpen && <div className="application-header__profile-menu" role="menu" aria-label="Appearance">
+          <div className="application-header__profile-heading">Appearance</div>
+          <button ref={darkOptionRef} type="button" role="menuitemradio" aria-checked={props.theme === 'dark'} onClick={() => { props.onTheme('dark'); setProfileOpen(false); profileButtonRef.current?.focus(); }}><Moon size={16}/>Dark{props.theme === 'dark' && <Check size={16} className="profile-check"/>}</button>
+          <button ref={lightOptionRef} type="button" role="menuitemradio" aria-checked={props.theme === 'light'} onClick={() => { props.onTheme('light'); setProfileOpen(false); profileButtonRef.current?.focus(); }}><Sun size={16}/>Light{props.theme === 'light' && <Check size={16} className="profile-check"/>}</button>
+        </div>}
+      </div>
     </div>
   </header>;
 }

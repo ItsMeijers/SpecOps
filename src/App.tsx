@@ -5,6 +5,8 @@ import { Dashboard } from './components/dashboard/Dashboard';
 import { PriorityQueueModal } from './components/dashboard/PriorityQueueModal';
 import { SpecificationWorkspace } from './components/workspace/SpecificationWorkspace';
 import { concurrencyLimit, initialQueueOrder, mockSpecifications } from './data/mockSpecifications';
+import { applyTheme, readTheme } from './theme';
+import type { Theme } from './theme';
 
 const asset = (name: string) => `/assets/${name}`;
 
@@ -84,6 +86,8 @@ export function OnboardingScreen({ onContinue }: { onContinue: () => void }) {
 }
 
 export function App() {
+  const [theme, setTheme] = useState<Theme>(readTheme);
+  const chooseTheme = (value: Theme) => { applyTheme(value); setTheme(value); };
   const [screen, setScreen] = useState<'onboarding' | 'dashboard'>('onboarding');
   const [workspaceId, setWorkspaceId] = useState<string | null>(null);
   const [queueOrder, setQueueOrder] = useState(initialQueueOrder);
@@ -111,8 +115,8 @@ export function App() {
   if (screen === 'onboarding') return <OnboardingScreen onContinue={() => setScreen('dashboard')} />;
 
   return <>
-    <div hidden={Boolean(selectedSpecification)}><Dashboard active={!selectedSpecification} queueOrder={queueOrder} queueOpen={queueOpen} onOpenQueue={openQueue} onOpenSpecification={setWorkspaceId}/></div>
-    {selectedSpecification && <SpecificationWorkspace key={selectedSpecification.id} specification={selectedSpecification} queueOpen={queueOpen} onOpenQueue={openQueue} onBack={() => setWorkspaceId(null)} onOpenSpecification={setWorkspaceId}/>}
+    <div hidden={Boolean(selectedSpecification)}><Dashboard active={!selectedSpecification} theme={theme} onTheme={chooseTheme} queueOrder={queueOrder} queueOpen={queueOpen} onOpenQueue={openQueue} onOpenSpecification={setWorkspaceId}/></div>
+    {selectedSpecification && <SpecificationWorkspace key={selectedSpecification.id} specification={selectedSpecification} theme={theme} onTheme={chooseTheme} queueOpen={queueOpen} onOpenQueue={openQueue} onBack={() => setWorkspaceId(null)} onOpenSpecification={setWorkspaceId}/>}
     {queueOpen && <PriorityQueueModal queued={queued} active={activeAgents} limit={concurrencyLimit} onMove={moveQueued} onClose={closeQueue} onSelect={id => { setQueueOpen(false); setWorkspaceId(id); requestAnimationFrame(() => document.querySelector<HTMLButtonElement>('.spec-workspace .application-header__back')?.focus()); }}/>}
   </>;
 }
