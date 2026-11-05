@@ -1,0 +1,8 @@
+.queue-modal-backdrop { position: fixed; z-index: 100; inset: 0; display: grid; place-items: center; padding: 20px; background: #050709bd; }
+.queue-modal { position: relative; width: min(540px,100%); max-height: min(720px,calc(100vh - 40px)); overflow-y: auto; color: #f2f3f4; background: #0f1316; border: 1px solid #343c42; border-radius: 12px; box-shadow: 0 24px 70px #0009; }
+.queue-modal .queue-panel { margin: 0; padding: 24px; border: 0; box-shadow: none; }
+.queue-modal .queue-heading { padding-right: 40px; }
+.queue-modal-close { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid transparent; border-radius: 6px; color: #aab3ba; background: transparent; cursor: pointer; }
+.queue-modal-close:hover { color: #f97316; border-color: #343c42; background: #1b2024; }
+.queue-modal :focus-visible { outline: 2px solid #f97316; outline-offset: 2px; }
+@media (max-width: 600px) { .queue-modal .queue-panel { padding: 18px 12px; } .queue-modal .queue-heading { align-items: flex-start; flex-direction: column; gap: 4px; } .queue-modal .queue-list li { gap: 5px; } .queue-modal .queue-waiting { display: none; } }
