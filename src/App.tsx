@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ArrowRight, LockKeyhole } from 'lucide-react';
 import { SpecOpsLogo } from './components/SpecOpsLogo';
+import { GitHubIntegration } from './components/GitHubIntegration';
 import { Dashboard } from './components/dashboard/Dashboard';
 import { PriorityQueueModal } from './components/dashboard/PriorityQueueModal';
 import { SpecificationWorkspace } from './components/workspace/SpecificationWorkspace';
@@ -62,7 +63,7 @@ function SecurityCard() {
   return (
     <aside className="security-card flex items-start">
       <span className="security-icon"><LockKeyhole size={31} strokeWidth={1.7} /></span>
-      <div><h3>Your accounts, your data</h3><p>SpecOps connects directly with GitHub and OpenAI using secure authentication. Your credentials are stored securely on your device and are never shared with third parties.</p></div>
+      <div><h3>Your accounts, your data</h3><p>GitHub CLI manages your GitHub sign-in. SpecOps does not store GitHub access tokens. GitHub CLI normally uses your system credential store and may use a local file if that store is unavailable.</p></div>
     </aside>
   );
 }
@@ -72,7 +73,7 @@ function AuthPanel({ onContinue }: { onContinue: () => void }) {
     <section className="auth-panel" aria-labelledby="auth-heading">
       <div className="auth-heading"><span className="eyebrow">GET STARTED</span><h2 id="auth-heading">Connect your accounts</h2><p>SpecOps uses your existing accounts. No separate API keys required.</p></div>
       <div className="integration-list grid">
-        <IntegrationCard name="GitHub" icon="github-icon.png" description={<>Access your repositories, issues, pull requests<br className="wide-only"/> and GitHub Actions.</>} button="Connect GitHub" />
+        <GitHubIntegration />
         <IntegrationCard name="ChatGPT" icon="chatgpt-icon.png" description={<>Use your own ChatGPT/Codex account for<br className="wide-only"/> specifications and AI agent execution.</>} button="Connect ChatGPT" />
       </div>
       <SecurityCard />
